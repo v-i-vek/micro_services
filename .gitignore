@@ -1,0 +1,3 @@
+api_gateway/node_modules
+identity_service/node_modules
+.env
