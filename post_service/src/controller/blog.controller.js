@@ -55,6 +55,16 @@ const allBlogs = async (req, res) => {
 
 const singleBlog = async (req, res) => {
   try {
+    const id = req.params.id
+    const cacheKey = `blog:${id}`;
+    const data = await redisClient.get(cacheKey);
+    if(data){
+        return res.status(200).json({success:true,message:"Blog fetched successfully",data: JSON.parse(data)})
+    }
+    const blog = await BlogModel.findById(id)
+    await redisClient.set(cacheKey,JSON.stringify(blog),"EX",20)
+    if(!blog) return res.status(404).json({message : "Blog not found"})
+    return res.status(200).json({success:true,message:"Blog fetched successfully",data: blog})
   } catch (error) {}
 };
 module.exports = { addBlog, allBlogs, singleBlog };
