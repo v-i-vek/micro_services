@@ -1,10 +1,10 @@
 const BlogModel = require("../model/Blog");
-const {redisClient} = require('../utils/redis.service')
-const {invalidateBlog} = require('../utils/redis.service')
+const {redisClient} = require('../config/redis')
+const {invalidateCache} = require('../utils/redis.service')
 const addBlog = async (req, res) => {
   try {
     const { title, content } = req.body;
-    await invalidateBlog('blogs:*')
+    await invalidateCache('blogs:*')
     await BlogModel.create({ user: req.user.userId, title, content });
     return res
       .status(200)
@@ -31,6 +31,7 @@ const allBlogs = async (req, res) => {
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(limit);
+    const totalNoOfPost = await BlogModel.countDocuments()
     const result = {
         blogs,
         currentPage:page,
