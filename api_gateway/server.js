@@ -38,6 +38,19 @@ app.use("/api/auth",proxy('http://localhost:3001/api/auth',{
     }
 }))
 
+app.use("/api/blog",proxy('http://localhost:3002/api/auth',{
+  ...proxyOption,
+  proxyReqOptDecortor:(proxyReq,srcReq)=>{
+    proxyReq.headers["Content-Type"] = 'application/json'
+    return proxyReq
+  },
+  userResDecorator:(proxyRes,proxyResData,userReq,userRes)=>{
+      console.log("Response Recieved from blog service : ", proxyRes.statuscode)
+        return proxyResData
+  }
+}))
+
+
 
 app.listen(port , ()=>{
     console.log(`API Gateway is running on port ${port}`)

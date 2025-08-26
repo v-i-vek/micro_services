@@ -1,0 +1,16 @@
+
+
+
+const addFile = async(req,res)=>{
+    try {
+        
+        console.log("----------->",req.file)
+
+
+
+    } catch (error) {
+        
+    }
+}
+
+module.exports = {addFile}
