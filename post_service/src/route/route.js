@@ -1,6 +1,7 @@
 const express = require('express')
 const router = express.Router()
-const{addBlog,allBlogs,singleBlog} = require('../controller/blog.controller')
+
+const{addBlog,allBlogs,singleBlog,deleteBlog} = require('../controller/blog.controller')
 const{authenticateReq} = require('../middleware/auth.middleware')
 
 
@@ -8,5 +9,6 @@ router.use(authenticateReq)
 router.post('/add-blog',addBlog)
 router.get('/all-blogs',allBlogs)
 router.get('/:id',singleBlog)
+router.delete('/:id',deleteBlog)
 
 module.exports = router

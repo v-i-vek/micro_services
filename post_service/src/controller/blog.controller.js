@@ -67,4 +67,17 @@ const singleBlog = async (req, res) => {
     return res.status(200).json({success:true,message:"Blog fetched successfully",data: blog})
   } catch (error) {}
 };
-module.exports = { addBlog, allBlogs, singleBlog };
+
+const deleteBlog = async(req,res)=>{
+  try {
+    const id = req.params.id
+    const cacheKey = `blog:${id}`;
+    await invalidateCache(cacheKey)
+    await BlogModel.findByIdAndDelete({id, user:req.user.userId})
+    return res.status(200).json({success:true,message:"Blog deleted successfully"})
+  } catch (error) {
+    console.log(error)
+    throw error
+  }
+}
+module.exports = { addBlog, allBlogs, singleBlog ,deleteBlog};
