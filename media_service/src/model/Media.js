@@ -1,10 +1,7 @@
 const mongoose = require('mongoose')
 
 const MediaSchema = new mongoose.Schema({
-    publicID:{
-        type:String,
-        require:true
-    },
+
     user:{
         type:mongoose.Schema.Types.ObjectId,
         ref:'User',
