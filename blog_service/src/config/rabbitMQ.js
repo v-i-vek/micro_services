@@ -1,4 +1,4 @@
-const amqp  = require(amqplib)
+const amqp  = require("amqplib")
 
 const EXChCHANGE_NAME = "BLOG_EVENTS"
 let connection = null;
@@ -6,7 +6,7 @@ let channel = null;
 async function connectTOMQ  (){
 try {
     connection = await amqp.connect(process.env.RABBITMQ_URL)
-    channel = await connection.createchannel();
+    channel = await connection.createChannel();
     await channel.assertExchange(EXChCHANGE_NAME,"topic",{durable:false});
 
     return channel;
@@ -30,4 +30,4 @@ const publishEvent = async(routingKey,message)=>{
     }
 }
 
-module.export = {publishEvent}
+module.exports = {publishEvent}

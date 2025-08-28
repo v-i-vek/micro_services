@@ -1,11 +1,16 @@
 const BlogModel = require("../model/Blog");
 const {redisClient} = require('../config/redis')
 const {invalidateCache} = require('../utils/redis.service')
+const{publishEvent} = require("../config/rabbitMQ")
+
+
+
+
 const addBlog = async (req, res) => {
   try {
-    const { title, content } = req.body;
+    const { title, content,mediaUrl } = req.body;
     await invalidateCache('blogs:*')
-    await BlogModel.create({ user: req.user.userId, title, content });
+    await BlogModel.create({ user: req.user.userId, title, content,mediaUrl });
     return res
       .status(200)
       .json({ success: true, message: "Blog added successfully" });
@@ -72,8 +77,13 @@ const deleteBlog = async(req,res)=>{
   try {
     const id = req.params.id
     const cacheKey = `blog:${id}`;
+    const userId = req.user.userId
     await invalidateCache(cacheKey)
-    await BlogModel.findByIdAndDelete({id, user:req.user.userId})
+    const result = await BlogModel.findByIdAndDelete({_id:id, user:userId})
+    await publishEvent("post.deleted",{
+        userId: userId,
+        mediaUrl:result.mediaUrl
+    })
     return res.status(200).json({success:true,message:"Blog deleted successfully"})
   } catch (error) {
     console.log(error)

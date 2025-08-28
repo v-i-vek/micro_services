@@ -1,44 +1,61 @@
-const { S3Client, PutObjectCommand, } = require("@aws-sdk/client-s3");
+const { S3Client, PutObjectCommand ,DeleteObjectCommand} = require("@aws-sdk/client-s3");
 const REGION = process.env.REGION;
-const s3Client = new S3Client(
-    {
-        region: REGION,
-        credentials: { accessKeyId: process.env.ACCESS_KEY, secretAccessKey: process.env.SECRET_ACCESS_KEY }
+const s3Client = new S3Client({
+  region: REGION,
+  credentials: {
+    accessKeyId: process.env.ACCESS_KEY,
+    secretAccessKey: process.env.SECRET_ACCESS_KEY,
+  },
+});
+const bucketName = process.env.BUCKET_NAME;
+
+const uploadFileToS3 = async (file, objectKey) => {
+  try {
+    if (!bucketName) {
+      throw new Error("BUCKET_NAME environment variable is not set");
     }
-);
 
+    const uploadFileParams = {
+      Bucket: bucketName,
+      Key: objectKey, 
+      Body: file.buffer, 
+      ContentType: file.mimetype, 
+    };
 
-const uploadFileToS3 = async(file, objectKey)=>{
-    try {
-        const bucketName = process.env.BUCKET_NAME;
-        if (!bucketName) {
-            throw new Error('BUCKET_NAME environment variable is not set');
-        }
-        
-        const uploadFileParams = {
-            Bucket: bucketName,
-            Key: objectKey,          // Changed to uppercase K
-            Body: file.buffer,       // Use buffer from multer file
-            ContentType: file.mimetype // Add content type for proper file handling
-        };
-        
-        console.log("S3 Upload Parameters:", {
-            Bucket: uploadFileParams.Bucket,
-            Key: uploadFileParams.Key,
-            ContentType: uploadFileParams.ContentType,
-            BodySize: uploadFileParams.Body.length
-        });
-        
-        const command = new PutObjectCommand(uploadFileParams);
-        await s3Client.send(command)
-        const objectUrl = `https://${bucketName}.s3.${REGION}.amazonaws.com/${objectKey}`;
+    // console.log("S3 Upload Parameters:", {
+    //   Bucket: uploadFileParams.Bucket,
+    //   Key: uploadFileParams.Key,
+    //   ContentType: uploadFileParams.ContentType,
+    //   BodySize: uploadFileParams.Body.length,
+    // });
 
-        return objectUrl
-        
-    } catch (error) {
-        console.log("Error while executing uploadFileTos3() function \n",error)
-        throw error
+    const command = new PutObjectCommand(uploadFileParams);
+    await s3Client.send(command);
+    const objectUrl = `https://${bucketName}.s3.${REGION}.amazonaws.com/${objectKey}`;
+    return objectUrl;
+
+  } catch (error) {
+    console.log("Error while executing uploadFileTos3() function \n", error);
+    throw error;
+  }
+};
+
+const deleteFileFromS3 = async (objectKey) => {
+  try {
+    if (!bucketName) {
+      throw new Error("BUCKET_NAME environment variable is not set");
     }
-}
 
-module.exports = { uploadFileToS3 }
+    const input = {
+      Bucket: bucketName,
+      Key: objectKey,// pass the object name stored in the s3.
+    };
+    const command = new DeleteObjectCommand(input);
+    const response = await s3Client.send(command);
+  } catch (error) {
+    console.log("Error while executing deleteFileFromS3() function \n", error);
+    throw error;
+  }
+};
+
+module.exports = { uploadFileToS3, deleteFileFromS3 };
