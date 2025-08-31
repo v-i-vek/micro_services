@@ -153,3 +153,24 @@
 // let a = w1.toLowerCase().split("").sort().join("")
 // console.log(a)
 
+// function testing(){
+//     return new Promise((resolve,reject)=>{
+//         setTimeout(() => {
+//             resolve("data fetched successfully")
+//         }, 9000);
+//     })
+// }
+
+// async function test(){
+// console.log("fist console")
+// const result = await testing()
+// console.log("result value ", result)
+// console.log("printing after the result")
+// }
+// test()
+
+// function hello(){
+//      x = 10
+// }
+// hello()
+// console.log("xxxxx",x)
