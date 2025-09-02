@@ -35,7 +35,7 @@ const proxyOption = {
 };
 
 app.use("/v1/auth", proxy('http://localhost:3001/api/auth', {
-  ...proxyOption,
+  // ...proxyOption,
   proxyReqOptDecorator: (proxyReq, srcReq) => {
     console.log(srcReq.originalUrl)
     proxyReq.headers["Content-Type"] = 'application/json'
