@@ -19,6 +19,7 @@ const redisClient = new Redis(process.env.REDIS_URL)
 app.use(express.json());
 app.use("/api/auth", (req, res, next) => {
     req.redisClient = redisClient
+    next()
 }, userRoutes);
 app.use(errorHandler);
 

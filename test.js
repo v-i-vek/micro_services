@@ -148,8 +148,55 @@
 
 // console.log(x("vivek"))
 
-
+    
 // const w1 = "Deepak";
 // let a = w1.toLowerCase().split("").sort().join("")
 // console.log(a)
 
+// function testing(){
+//     return new Promise((resolve,reject)=>{
+//         setTimeout(() => {
+//             resolve("data fetched successfully")
+//         }, 9000);
+//     })
+// }
+
+// async function test(){
+// console.log("fist console")
+// const result = await testing()
+// console.log("result value ", result)
+// console.log("printing after the result")
+// }
+// test()
+
+// function hello(){
+//      x = 10
+// }
+// hello()
+// console.log("xxxxx",x)
+
+console.log("hello world")
+
+process.nextTick(()=>{
+    console.log("process next tick");
+    
+})
+
+setTimeout((()=>{
+    console.log("set timeout value")
+}),3000)
+new Promise((resove,reject)=>{
+    setTimeout((()=>{
+        console.log("inside the promise");
+        resove("done")
+    }),3000)
+})
+
+
+console.log("last log")
+
+queueMicrotask(() => {
+    // Code to be run inside the micro-task 
+    console.log("addin the micro task");
+    
+})
