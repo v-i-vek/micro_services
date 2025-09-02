@@ -4,7 +4,7 @@ const RefreshTokenModel = require('../Models/refreshToken')
 
 const createToken = async (user) => {
     try {
-        const accessToken = await jwt.sign({ id: user.id, email: user.email }, process.env.SECRET_KEY, { expiresIn: '7d' })
+        const accessToken = await jwt.sign({ id: user.id, email: user.email }, process.env.JWT_SECRET, { expiresIn: '7d' })
 
         const refreshToken = crypto.randomBytes(40).toString('hex')
         const expiresAt = new Date();
