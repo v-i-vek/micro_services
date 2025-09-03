@@ -37,6 +37,13 @@ const proxyOption = {
 };
 
 // for authorization
+
+app.use('/v1/hello',(req,res,next)=>{
+  return res.status(200).json({
+        success:true,
+        message:"welcome to our API"
+  })
+})
 app.use(
   "/v1/auth",
   proxy("http://localhost:3001/api/auth", {
