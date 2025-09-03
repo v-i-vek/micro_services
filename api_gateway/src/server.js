@@ -38,11 +38,12 @@ const proxyOption = {
 
 // for authorization
 
-app.use('/v1/hello',(req,res,next)=>{
-  return res.status(200).json({
+app.get('/v1/hello',(req,res,next)=>{
+   res.status(200).json({
         success:true,
         message:"welcome to our API"
   })
+  next()
 })
 app.use(
   "/v1/auth",
