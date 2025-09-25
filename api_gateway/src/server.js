@@ -2,11 +2,17 @@ require("dotenv").config();
 const express = require("express");
 const app = express();
 const proxy = require("express-http-proxy");
+const cors = require('cors')
 
 const { validateToken } = require("./middleware/validate.token");
-// Add body parser middleware
+// Add body parser Middleware
 
 const port = process.env.PORT || 3000;
+
+const auth_service = process.env.AUTH_SERVICE || "localhost:3001"
+const blog_service = process.env.BLOG_SERVICE || "localhost:3002"
+const media_service = process.env.MEDIA_SERVICE || "localhost:3003"
+app.use(cors())
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -47,7 +53,7 @@ app.get('/v1/hello',(req,res,next)=>{
 })
 app.use(
   "/v1/auth",
-  proxy("http://localhost:3001/api/auth", {
+  proxy(`http://${auth_service}/api/auth`, {
     ...proxyOption,
     proxyReqOptDecorator: (proxyReq, srcReq) => {
       proxyReq.headers["Content-Type"] = "application/json";
@@ -67,7 +73,7 @@ app.use(
 app.use(
   "/v1/blog",
   validateToken,
-  proxy("http://localhost:3002/api/blog", {
+  proxy(`http://${blog_service}/api/blog`, {
     ...proxyOption,
     proxyReqOptDecorator: (proxyReq, srcReq) => {
       proxyReq.headers["Content-Type"] = "application/json";
@@ -88,7 +94,7 @@ app.use(
 app.use(
   "/v1/media",
   validateToken,
-  proxy("http://localhost:3003/api/media", {
+  proxy(`http://${media_service}/api/media`, {
     ...proxyOption,
     proxyReqOptDecorator: (proxyReq, srcReq) => {
       proxyReq.headers["x-user-id"] = srcReq.user.id;

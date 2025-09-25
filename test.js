@@ -175,28 +175,51 @@
 // hello()
 // console.log("xxxxx",x)
 
-console.log("hello world")
+// console.log("hello world")
 
-process.nextTick(()=>{
-    console.log("process next tick");
+// process.nextTick(()=>{
+//     console.log("process next tick");
     
-})
+// })
 
-setTimeout((()=>{
-    console.log("set timeout value")
-}),3000)
-new Promise((resove,reject)=>{
-    setTimeout((()=>{
-        console.log("inside the promise");
-        resove("done")
-    }),3000)
-})
+// setTimeout((()=>{
+//     console.log("set timeout value")
+// }),3000)
+// new Promise((resove,reject)=>{
+//     setTimeout((()=>{
+//         console.log("inside the promise");
+//         resove("done")
+//     }),3000)
+// })
 
 
-console.log("last log")
+// console.log("last log")
 
-queueMicrotask(() => {
-    // Code to be run inside the micro-task 
-    console.log("addin the micro task");
+// queueMicrotask(() => {
+//     // Code to be run inside the micro-task 
+//     console.log("addin the micro task");
     
-})
+// })
+
+
+function fibonacci(n) {
+    if (n < 2)
+        return 1;
+    return fibonacci(n - 1) + fibonacci(n - 2);
+}
+console.time("fibonacci")
+console.log(fibonacci(500))
+console.timeEnd("fibonacci")
+
+function memoisedFibonacci(n, cache) {
+    cache = cache || [1, 1]
+    if (cache[n])
+        return cache[n]
+    return cache[n] = memoisedFibonacci(n - 1, cache) + 
+    memoisedFibonacci(n - 2, cache);
+}
+console.time("memo")
+
+memoisedFibonacci(500,null)
+console.timeEnd("memo")
+
